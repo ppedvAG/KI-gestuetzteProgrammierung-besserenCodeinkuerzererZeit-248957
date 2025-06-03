@@ -1,0 +1,130 @@
+<!-- HTML-Datei zum Testen der LearnSpark API Endpunkte -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LearnSpark API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; background-color: #f9f9f9; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .form-section { margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #fff; }
+        .form-section h2 { margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"] { width: calc(100% - 22px); padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 10px 20px; background-color: #5cb85c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; transition: background-color 0.3s ease; }
+        button:hover { background-color: #4cae4c; }
+        #response, #generateResponse { margin-top: 20px; padding: 15px; border: 1px solid #d4edda; border-radius: 5px; background-color: #f8f9fa; white-space: pre-wrap; word-wrap: break-word; font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; font-size: 14px; color: #333; }
+        .error { border-color: #f5c6cb; background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>LearnSpark API Test</h1>
+
+        <div class="form-section">
+            <h2>Lernpfad erstellen (/lernpfad POST)</h2>
+            <div class="form-group">
+                <label for="name">Lernpfad Name:</label>
+                <input type="text" id="name" placeholder="Geben Sie den Namen ein">
+            </div>
+            <button onclick="createLearningPath()">Lernpfad erstellen</button>
+            <div id="response" class="response-area"></div>
+        </div>
+
+        <div class="form-section">
+            <h2>Lernpfad generieren (/generate-path POST)</h2>
+            <div class="form-group">
+                <label for="topic">Thema für Lernpfad:</label>
+                <input type="text" id="topic" placeholder="z.B. Introduction to Machine Learning">
+            </div>
+            <button onclick="generateLearningPath()">Lernpfad generieren</button>
+            <div id="generateResponse" class="response-area"></div>
+        </div>
+
+    </div>
+
+    <script>
+        // JavaScript Funktion zum Erstellen eines Lernpfads via API
+        async function createLearningPath() {
+            const name = document.getElementById('name').value;
+            const responseDiv = document.getElementById('response');
+            responseDiv.textContent = 'Laden...';
+            responseDiv.className = 'response-area'; // Reset class
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/lernpfad', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name: name })
+                });
+                
+                const data = await response.json();
+
+                if (!response.ok) {
+                    responseDiv.innerHTML = `
+                        <h3>Fehler (${response.status}):</h3>
+                        <pre class="error">${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                    responseDiv.className = 'response-area error';
+                } else {
+                     responseDiv.innerHTML = `
+                        <h3>Antwort:</h3>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                     responseDiv.className = 'response-area';
+                }
+
+            } catch (error) {
+                responseDiv.innerHTML = `
+                    <h3>Fehler:</h3>
+                    <pre class="error">${error.message}</pre>
+                `;
+                 responseDiv.className = 'response-area error';
+            }
+        }
+
+        // JavaScript Funktion zum Generieren eines Lernpfads via API
+        async function generateLearningPath() {
+            const topic = document.getElementById('topic').value;
+            const responseDiv = document.getElementById('generateResponse');
+            responseDiv.textContent = 'Laden...';
+            responseDiv.className = 'response-area'; // Reset class
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/generate-path', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ topic: topic })
+                });
+                
+                const data = await response.json();
+
+                 if (!response.ok) {
+                    responseDiv.innerHTML = `
+                        <h3>Fehler (${response.status}):</h3>
+                        <pre class="error">${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                     responseDiv.className = 'response-area error';
+                } else {
+                     responseDiv.innerHTML = `
+                        <h3>Antwort:</h3>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                     responseDiv.className = 'response-area';
+                }
+
+            } catch (error) {
+                responseDiv.innerHTML = `
+                    <h3>Fehler:</h3>
+                    <pre class="error">${error.message}</pre>
+                `;
+                responseDiv.className = 'response-area error';
+            }
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,6 @@
+# Konfigurationsdatei für LearnSpark Projekt
+# Wird von Tools wie Poetry und PyTest verwendet.
+
+[tool.pytest.ini_options]
+pythonpath = "." # Fügt das Projekt-Root-Verzeichnis zum Python-Pfad hinzu
+addopts = "--strict-markers --ignore=venv" # Zusätzliche PyTest-Optionen (ignoriert venv) 

@@ -1,0 +1,6 @@
+# Projektabhängigkeiten für LearnSpark
+
+flask==3.0.2
+python-dotenv==1.0.1
+requests==2.31.0
+pytest==8.1.1 
